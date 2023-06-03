@@ -1,0 +1,7 @@
+.DS_Store
+.env
+dist
+lib
+node_modules
+tsconfig.tsbuildinfo
+!.gitkeep
