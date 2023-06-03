@@ -11,7 +11,7 @@ Supported types of projects:
 You can create a new project interactively by running:
 
 ```sh
-npx palmabit-cli@latest
+npx @palmabit/palmabit-cli@latest
 ```
 
 You will be asked for the type of the project to install.
