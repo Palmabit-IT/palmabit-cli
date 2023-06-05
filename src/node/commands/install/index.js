@@ -34,7 +34,24 @@ const questions = [
     message: 'License?',
     default: 'MIT',
   },
+  {
+    type: 'list',
+    name: 'eslint',
+    message: 'Eslint, Rome or none?',
+    choices: ['Eslint', 'Rome', 'none'],
+  },
 ];
+
+function getBranchFromEslintAnswer(answer) {
+  switch (answer) {
+    case 'Eslint':
+      return 'eslint';
+    case 'Rome':
+      return 'rome';
+    default:
+      return 'master';
+  }
+}
 
 export default async function install() {
   console.log('Creating a new Node.js project with TypeScript...');
@@ -42,8 +59,9 @@ export default async function install() {
   inquirer.prompt(questions)
     .then(async (answers) => {
       const path = removeTrailingSlash(answers.path);
+      const branch = getBranchFromEslintAnswer(answers.eslint);
       
-      await execCommand(`git clone git@github.com:drubetti/TypeScript-Babel-Express-Starter.git ${path}`)
+      await execCommand(`git clone git@github.com:drubetti/TypeScript-Babel-Express-Starter.git ${path} -b ${branch}`);
       console.log('Project created successfully!');
 
       const { name, description, author, license } = answers;
