@@ -23,13 +23,13 @@ const questions = [
     message: 'Description?',
   },
   {
-    type: 'author',
+    type: 'input',
     name: 'author',
     message: 'Author?',
     default: 'Palmabit',
   },
   {
-    type: 'license',
+    type: 'input',
     name: 'license',
     message: 'License?',
     default: 'MIT',
