@@ -1,23 +1,10 @@
-#!/usr/bin/env node
+import { program } from "commander";
+import nodeCommands from "./node/index.js";
+import expoCommands from "./expo/index.js";
 
-import inquirer from 'inquirer';
+program.name("palmabit-cli").description("A palmabit cli").version("0.0.1");
 
-const questions = [
-  {
-    type: 'list',
-    name: 'appToInstall',
-    message: 'What do you want to install?',
-    choices: ['Node.js + Typescript + Express'],
-  },
-];
+program.command("expo").description("Expo tools and utilities").action(expoCommands);
+program.command("node").description("Node tools and utilities").action(nodeCommands);
 
-inquirer.prompt(questions).then(async (answers) => {
-  switch (answers.appToInstall) {
-    case 'Node.js + Typescript + Express':
-      const { default: createNodeApp } = await import('./node/index.js');
-      createNodeApp();
-      break;
-    default:
-      console.log('No app selected');
-  }
-});
+program.parse(process.argv);
