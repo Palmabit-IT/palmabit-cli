@@ -1,20 +1,34 @@
 # Palmabit CLI
 
-The CLI allows to create different types of projects.
+The CLI allows to create and manage different types of projects.
 
 Supported types of projects:
 
 - Node.js + Typescript + Express
 
+- React Native + Expo
+
 ## Interactive
 
-You can create a new project interactively by running:
+### Node
+
+You can create a new node project interactively by running:
 
 ```sh
-npx @palmabit/palmabit-cli@latest
+npx @palmabit/palmabit-cli@latest node
 ```
 
 You will be asked for the type of the project to install.
+
+### Expo
+
+You can manage an existing expo project interactively by running:
+
+```sh
+npx @palmabit/palmabit-cli@latest expo
+```
+
+You will be asked for the action to perform.
 
 ## Author
 

@@ -4,45 +4,58 @@ import inquirer from "inquirer";
 import listBuilds from "../../commands/listBuilds/index.js";
 import execCommand from "../../../utils/execCommand.js";
 import extractFilenameAndExtension from "../../../utils/extractFilenameAndExtension.js";
+import downloadBuild from "../../commands/downloadBuild/index.js";
+import isValidDirectoryPath from "../../../utils/isValidDirectoryPath.js";
+import path from 'path'
 
-export default function installDevelopmentBuild() {
+export default function downloadDevelopmentBuild() {
   const questions = [
     {
       type: "list",
       name: "device",
-      message: "On what device do you want to install?",
+      message: "For what device do you want to download the build?",
       choices: ["Android Device/Emulator", "iOS Simulator", "iOS Device"],
+    },
+    {
+      type: "input",
+      name: "path",
+      message: "Where do you want to download the build?",
+      default: "./build",
+      validate: (input) => isValidDirectoryPath(input) || "Invalid path",
     },
   ];
 
   inquirer.prompt(questions).then(async (answers) => {
+    const config = {
+      path: path.resolve(answers.path)
+    };
+
     switch (answers.device) {
       case "Android Device/Emulator":
-        downloadLatestBuild({
-          platform: "android",
-          profile: "development",
-        });
+        config.platform = "android";
+        config.profile = "development";
         break;
       case "iOS Simulator":
-        downloadLatestBuild({
-          platform: "ios",
-          profile: "development-simulator",
-        });
+        config.platform = "ios";
+        config.profile = "development-simulator";
         break;
       case "iOS Device":
-        downloadLatestBuild({
-          platform: "ios",
-          profile: "development",
-        });
+        config.platform = "ios";
+        config.profile = "development";
         break;
       default:
         console.log("No platform selected");
+        return;
     }
+
+    downloadLatestBuild(config);
   });
 }
 
 async function downloadLatestBuild(config) {
-  const [latestBuild] = await listBuilds(config);
+  const { platform, profile, path } = config;
+
+  const [latestBuild] = await listBuilds({ platform, profile });
 
   if (!latestBuild) {
     console.log("No builds found");
@@ -51,14 +64,9 @@ async function downloadLatestBuild(config) {
 
   const { artifacts: { buildUrl } = {} } = latestBuild;
 
-  const { filename, extension } = extractFilenameAndExtension(buildUrl);
-  const basePath = `./build/${config.platform}`;
-  const downloadPath = `.${basePath}/${filename}${extension}`;
-
-  await execCommand(`curl --create-dirs -o ${downloadPath} -L ${buildUrl}`);
-
-  if (extension === ".gz") {
-    await execCommand(`tar -xzvf ${downloadPath} -C ${basePath}`);
-    await execCommand(`rm ${downloadPath}`);
-  }
+  await downloadBuild({
+    buildUrl,
+    basePath: `${path}/${config.platform}`,
+    filePrefix: "development-",
+  });
 }
