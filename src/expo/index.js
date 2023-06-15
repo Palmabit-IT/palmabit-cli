@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
 import inquirer from "inquirer";
+import downloadDevelopmentBuild from "./programs/downloadDevelopmentBuild/index.js";
 
-export default function nodeCommands() {
+export default function expoCommands() {
   const questions = [
     {
       type: "list",
       name: "nextAction",
       message: "What do you want to do?",
-      choices: ["Install project"],
+      choices: ["Download development build"],
     },
   ];
 
   inquirer.prompt(questions).then(async (answers) => {
     switch (answers.nextAction) {
-      case "Install project":
-        const { default: createNodeApp } = await import("./programs/createNodeApp/index.js");
-        createNodeApp();
+      case "Download development build":
+        downloadDevelopmentBuild();
         break;
       default:
         console.log("No app selected");
