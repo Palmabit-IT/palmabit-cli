@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from "commander";
 import nodeCommands from "./node/index.js";
 import expoCommands from "./expo/index.js";
