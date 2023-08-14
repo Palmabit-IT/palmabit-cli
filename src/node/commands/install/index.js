@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
 import inquirer from 'inquirer';
 import execCommand from '../../../utils/execCommand.js';
 import { removeTrailingSlash } from '../../../utils/strings.js';
+import saveAttributesToPackageJson from '../../../utils/saveAttributesToPackageJson.js';
 
 const questions = [
   {
@@ -55,40 +55,20 @@ function getBranchFromEslintAnswer(answer) {
 
 export default async function install() {
   console.log('Creating a new Node.js project with TypeScript...');
-  
+
   inquirer.prompt(questions)
     .then(async (answers) => {
       const path = removeTrailingSlash(answers.path);
       const branch = getBranchFromEslintAnswer(answers.eslint);
-      
+
       await execCommand(`git clone git@github.com:drubetti/TypeScript-Babel-Express-Starter.git ${path} -b ${branch}`);
       console.log('Project created successfully!');
 
       const { name, description, author, license } = answers;
 
       if (name || author || description || license) {
-        // Leggi il file package.json
-        const packageJson = JSON.parse(fs.readFileSync(`${path}/package.json`, 'utf-8'));
-
-        // Modifica le proprietà se sono state specificate
-        if (name) {
-          packageJson.name = name;
-        }
-        if (description) {
-          packageJson.description = description;
-        }
-        if (author) {
-          packageJson.author = author;
-        }
-        if (license) {
-          packageJson.license = license;
-        }
-
-        packageJson.version = '0.1.0';
-        delete packageJson.repository;
-
-        // Scrivi le modifiche nel file package.json
-        fs.writeFileSync(`${path}/package.json`, JSON.stringify(packageJson, null, 2));
+        const attributes = { name, description, author, license };
+        saveAttributesToPackageJson({ path, attributes });
       }
 
       console.log('All done!');
