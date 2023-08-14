@@ -1,0 +1,31 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier", "import"],
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "browser": false,
+    "jest": true
+  },
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": false
+    },
+    "sourceType": "module"
+  },
+  "globals": {
+    "strapi": true
+  },
+  "rules": {
+    "semi": 2,
+    "prettier/prettier": "error",
+    "import/no-unresolved": [0, { "caseSensitive": true }],
+    "import/extensions": 0,
+    "no-console": 2,
+    "react/jsx-filename-extension": 0
+  }
+}

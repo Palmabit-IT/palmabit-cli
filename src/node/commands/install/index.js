@@ -55,19 +55,20 @@ function getBranchFromEslintAnswer(answer) {
 
 export default async function install() {
   console.log('Creating a new Node.js project with TypeScript...');
-  
+
   inquirer.prompt(questions)
     .then(async (answers) => {
       const path = removeTrailingSlash(answers.path);
       const branch = getBranchFromEslintAnswer(answers.eslint);
-      
+
       await execCommand(`git clone git@github.com:drubetti/TypeScript-Babel-Express-Starter.git ${path} -b ${branch}`);
       console.log('Project created successfully!');
 
       const { name, description, author, license } = answers;
 
       if (name || author || description || license) {
-        saveAttributesToPackageJson({ path, name, description, author, license });
+        const attributes = { name, description, author, license };
+        saveAttributesToPackageJson({ path, attributes });
       }
 
       console.log('All done!');
