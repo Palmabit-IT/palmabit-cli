@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import path from 'path';
+import { fileURLToPath } from 'url';
 import inquirer from 'inquirer';
 import execCommand from '../../../utils/execCommand.js';
 import { removeTrailingSlash } from '../../../utils/strings.js';
@@ -40,14 +42,16 @@ export default async function install() {
       const { name, description, author } = answers;
 
       // path is relative to the palmabit-cli root directory!
-      const path = removeTrailingSlash(answers.path);
+      const strapiPath = removeTrailingSlash(answers.path);
 
       if (name || author || description) {
         // Install Strapi
-        await execCommand(`mkdir -p ${path}`);
-        await execCommand(`npx create-strapi-app@latest ${path} --quickstart --no-run --typescript`);
+        await execCommand(`mkdir -p ${strapiPath}`);
+        await execCommand(`npx create-strapi-app@latest ${strapiPath} --quickstart --no-run --typescript`);
         // Copy files from templates
-        await execCommand(`cp -r ./src/strapi/templates/. ${path}`);
+        const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+        const templatePath = path.join(moduleDirectory, '../../templates');
+        await execCommand(`cp -r ${templatePath}/. ${strapiPath}`);
 
         const attributes = {
           name,
@@ -66,19 +70,19 @@ export default async function install() {
           }
         };
 
-        saveAttributesToPackageJson({ path, attributes });
+        saveAttributesToPackageJson({ path: strapiPath, attributes });
 
         // Install libraries
-        await execCommand(`yarn add --cwd ${path} -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser`);
-        await execCommand(`yarn add --cwd ${path} -D eslint-plugin-react eslint-config-prettier eslint-plugin-prettier eslint-plugin-import prettier`);
-        await execCommand(`yarn add --cwd ${path} -D husky lint-staged`);
+        await execCommand(`yarn add --cwd ${strapiPath} -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser`);
+        await execCommand(`yarn add --cwd ${strapiPath} -D eslint-plugin-react eslint-config-prettier eslint-plugin-prettier eslint-plugin-import prettier`);
+        await execCommand(`yarn add --cwd ${strapiPath} -D husky lint-staged`);
         // Install plugins
-        await execCommand(`yarn add --cwd ${path} @palmabit/strapi-app-version`);
+        await execCommand(`yarn add --cwd ${strapiPath} @palmabit/strapi-app-version`);
 
         // Add scripts to package.json
-        await addScriptToPackageJson('lint', "eslint './src/**/*.{js,jsx,ts,tsx}'", path);
-        await addScriptToPackageJson('lint:fix', "eslint './src/**/*.{js,jsx,ts,tsx}' --fix", path);
-        await addScriptToPackageJson('format', "prettier --write './src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc", path);
+        await addScriptToPackageJson('lint', "eslint './src/**/*.{js,jsx,ts,tsx}'", strapiPath);
+        await addScriptToPackageJson('lint:fix', "eslint './src/**/*.{js,jsx,ts,tsx}' --fix", strapiPath);
+        await addScriptToPackageJson('format', "prettier --write './src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc", strapiPath);
       }
 
       console.log('All done!');
