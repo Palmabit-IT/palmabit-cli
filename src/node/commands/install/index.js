@@ -29,12 +29,6 @@ const questions = [
     default: 'Palmabit',
   },
   {
-    type: 'input',
-    name: 'license',
-    message: 'License?',
-    default: 'MIT',
-  },
-  {
     type: 'list',
     name: 'eslint',
     message: 'Eslint, Rome or none?',
@@ -64,12 +58,15 @@ export default async function install() {
       await execCommand(`git clone git@github.com:drubetti/TypeScript-Babel-Express-Starter.git ${path} -b ${branch}`);
       console.log('Project created successfully!');
 
-      const { name, description, author, license } = answers;
+      const { name, description, author } = answers;
 
-      if (name || author || description || license) {
-        const attributes = { name, description, author, license };
+      if (name || author || description) {
+        const attributes = { name, description, author };
         saveAttributesToPackageJson({ path, attributes });
       }
+
+      // Delete LICENSE file
+      await execCommand(`rm -f ${path}/LICENSE`);
 
       console.log('All done!');
     })

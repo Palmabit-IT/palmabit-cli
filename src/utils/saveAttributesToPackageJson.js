@@ -4,7 +4,7 @@ export default function saveAttributesToPackageJson({ path = '.', attributes = {
   const packageJson = JSON.parse(fs.readFileSync(`${path}/package.json`, 'utf-8'));
   const { name, description, author, license, ...others } = attributes;
 
-  // Modifica le proprietà se sono state specificate
+  // Modify the properties
   if (name) {
     packageJson.name = name;
   }
@@ -14,9 +14,10 @@ export default function saveAttributesToPackageJson({ path = '.', attributes = {
   if (author) {
     packageJson.author = author;
   }
-  if (license) {
-    packageJson.license = license;
-  }
+
+  // Remove license attribute
+  packageJson.license = undefined;
+
 
   packageJson.version = '0.1.0';
   delete packageJson.repository;
@@ -31,6 +32,6 @@ export default function saveAttributesToPackageJson({ path = '.', attributes = {
     }
   }
 
-  // Scrivi le modifiche nel file package.json
+  // Write modifications to package.json
   fs.writeFileSync(`${path}/package.json`, JSON.stringify(packageJson, null, 2));
 }
