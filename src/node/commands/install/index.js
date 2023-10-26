@@ -31,8 +31,8 @@ const questions = [
   {
     type: 'list',
     name: 'eslint',
-    message: 'Eslint, Rome or none?',
-    choices: ['Eslint', 'Rome', 'none'],
+    message: 'Eslint, Biome or none?',
+    choices: ['Eslint', 'Biome', 'none'],
   },
 ];
 
@@ -40,8 +40,8 @@ function getBranchFromEslintAnswer(answer) {
   switch (answer) {
     case 'Eslint':
       return 'eslint';
-    case 'Rome':
-      return 'rome';
+    case 'Biome':
+      return 'biome';
     default:
       return 'master';
   }
