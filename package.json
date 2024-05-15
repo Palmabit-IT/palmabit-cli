@@ -1,6 +1,6 @@
 {
   "name": "@palmabit/palmabit-cli",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "",
   "main": "src/index.js",
   "bin": {
@@ -17,6 +17,6 @@
   "author": "Palmabit",
   "dependencies": {
     "commander": "^12.0.0",
-    "inquirer": "^9.2.18"
+    "inquirer": "^9.2.21"
   }
 }
