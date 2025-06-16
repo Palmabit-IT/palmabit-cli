@@ -16,7 +16,7 @@
   },
   "author": "Palmabit",
   "dependencies": {
-    "commander": "^13.1.0",
-    "inquirer": "^12.6.1"
+    "commander": "^14.0.0",
+    "inquirer": "^12.6.3"
   }
 }
